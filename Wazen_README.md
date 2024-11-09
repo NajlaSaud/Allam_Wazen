@@ -91,10 +91,6 @@ The application will be available at `http://127.0.0.1:5000`.
    - Each bait is diacritized and analyzed for meter and rhyme.
 3. **Output:** The application displays the meter, rhyme structure, and any detected mismatches or errors.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
 ## Acknowledgments
 
 This project utilizes multiple open-source libraries and packages for Arabic text processing and meter analysis. Special thanks to contributors and the open-source community for making these tools available.
