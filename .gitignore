@@ -1,0 +1,12 @@
+# Ignore all .log files
+*.log
+
+# Ignore all files with .env extension
+*.env
+
+# Ignore specific directory
+/Bait_Analysis/config.json
+/venv
+/venv/Lib/site-packages/torch/lib/torch_cpu.dll
+/venv/Lib/site-packages/torch/lib/dnnl.lib
+/Dataset/APCD-json/dataset.json

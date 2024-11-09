@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وازِن</title>
+    <style>
+        body {
+            font-family: Almarai, sans-serif;
+            background-color: #FCFAF8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 100px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: Almarai, sans-serif;
+        }
+        .centered-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 200px; /* Adjust the width as needed */
+        }
+        input[type="submit"] {
+            padding: 10px;
+            background-color: #C5AE97;
+            color: black;
+            border: none;
+            cursor: pointer;
+            font-family: 'Almarai', sans-serif;
+            font-weight: bold; /* Bold font */
+            font-size: 16px; /* Larger font size */
+            border-radius: 5px;
+        }
+        input[type="submit"]:hover {
+            background-color: #A78461;
+        }
+        .output {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            direction: rtl;
+        }
+        .output-section {
+            margin-bottom: 20px;
+            margin-top: 20px;
+            background-color: #F3EEE9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            direction: rtl;
+        }
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .shatr {
+            background-color: #E8DED4;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+         .circle-container {
+            display: flex;
+            align-items: center;
+        }
+        .circle-item {
+            display: flex;
+            align-items: center;
+            margin-right: 20px; /* Space between circles */
+        }
+        .circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 10px;
+        }
+        .label {
+            margin-left: 50px;
+            font-size: 12px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+<!--    <h1>وَازِن</h1>-->
+    <img src="{{ url_for('static', filename='images/wazen_logo.png') }}" alt="وازن" class="centered-image">
+    <form action="/process" method="post">
+        <label for="arabic_text">الرجاء إدخال القصيدة:</label>
+        <textarea name="arabic_text" placeholder="اكتب أو انسخ قصيدتك هنا: كل شطر في سطر منفصل" required></textarea>
+        <input type="submit" value="حلّل القصيدة">
+    </form>
+
+    <!--        {% if text %}-->
+    <!--        <div class="output">-->
+    <!--            <p>{{ text }}</p>-->
+    <!--        </div>-->
+    <!--        {% endif %}-->
+
+    {% if meter or qafiah or analysis %}
+    <!--        <div class="output">-->
+    <div class="output-section">
+        <strong>البحر الشعري:</strong>
+        <p>{{ meter }}</p>
+    </div>
+    <div class="output-section">
+        <strong>القافية:</strong>
+        <p>{{ qafiah }}</p>
+    </div>
+    <div class="output-section">
+        <strong>تحليل الأبيات:</strong>
+        <div class="circle-container">
+    <div class="circle-item">
+        <div class="circle" style="background-color: #C55A11;"></div>
+        <div class="label">كسر لزيادة حرف</div>
+    </div>
+    <div class="circle-item">
+        <div class="circle" style="background-color: #FF9900;"></div>
+        <div class="label">كسر لنقص حرف</div>
+    </div>
+    <div class="circle-item">
+        <div class="circle" style="background-color: black;"></div>
+        <div class="label">الوزن صحيح</div>
+    </div>
+    <div class="circle-item">
+        <div class="circle" style="background-color: #8EC000;"></div>
+        <div class="label">كسر لاختلاف الحركة</div>
+    </div>
+</div>
+        <div class="analysis-grid">
+            {% for bait in analysis %}
+            <div class="shatr">
+                <p><strong> الشطر الأول مشكلاً: </strong>{{ bait.shatr1.diacritized }}</p>
+                <p><strong>الكتابة العروضية: </strong>{{ bait.shatr1.arudi_style }}</p>
+                <p><strong>الحركة والسكون: </strong>{{ bait.shatr1.patterns_mismatches | safe }}</p>
+                <p><strong>تفعيلات الشطر: </strong>{{ bait.shatr1.closest_pattern }}</p>
+                <p>{{ bait.shatr1.notes }}</p>
+            </div>
+
+            <div class="shatr">
+                <p><strong>الشطر الثاني مشكلاً: </strong>{{ bait.shatr2.diacritized }}</p>
+                <p><strong>الكتابة العروضية: </strong>{{ bait.shatr2.arudi_style }}</p>
+                <p><strong>الحركة والسكون: </strong>{{ bait.shatr2.patterns_mismatches | safe }}</p>
+                <p><strong>تفعيلات الشطر: </strong>{{ bait.shatr2.closest_pattern }}</p>
+                <p>{{ bait.shatr2.notes }}</p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <!--        </div>-->
+    {% endif %}
+
+</div>
+</body>
+</html>
